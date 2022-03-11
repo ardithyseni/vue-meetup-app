@@ -2,7 +2,10 @@
   <div id="app">
     <TheNavbar />
     <!-- <PageHome /> -->
-    <router-view />
+    <div class="page-wrapper">
+      <router-view />
+    </div>
+
     <TheFooter />
   </div>
 </template>
@@ -24,6 +27,12 @@ export default {
 <style lang="scss">
 @import 'assets/css/spacing.css';
 @import '~bulma/bulma.sass';
+
+
+.page-wrapper{
+  min-height: 55vh;
+}
+
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

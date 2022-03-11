@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import AppDropdown from './components/shared/AppDropdown'
 import AppHero from './components/shared/AppHero'
-
+import AppSpinner from './components/shared/AppSpinner'
 import moment from 'moment'
 
 
