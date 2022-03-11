@@ -5,6 +5,8 @@ import PageHome from '@/pages/PageHome'
 import PageMeetupDetail from '@/pages/PageMeetupDetail'
 import PageMeetupFind from '@/pages/PageMeetupFind'
 import PageNotFound from '@/pages/PageNotFound';
+import PageRegister from '@/pages/PageRegister';
+import PageLogin from '@/pages/PageLogin';
 
 Vue.use(Router)
 
@@ -24,6 +26,16 @@ const router = new Router({
             path: '/meetups/:id',
             name: 'PageMeetupDetail',
             component: PageMeetupDetail
+        },
+        {
+            path: '/register',
+            name: 'PageRegister',
+            component: PageRegister
+        },
+        {
+            path: '/login',
+            name: 'PageLogin',
+            component: PageLogin
         },
         {
             path: '*', // if routes above dont match, route here

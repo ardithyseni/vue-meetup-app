@@ -8,13 +8,15 @@ Vue.use(Vuex)
 import meetups from './modules/meetups'
 import threads from './modules/threads'
 import categories from './modules/categories'
+import auth from './modules/auth'
 
 export default new Vuex.Store({
 
     modules: {
         meetups,
         threads,
-        categories
+        categories,
+        auth
     },
 
     // in state we keep our data, sharing with the components
