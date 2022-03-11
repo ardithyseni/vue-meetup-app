@@ -34,7 +34,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  // import axios from 'axios'
   import CategoryItem from '@/components/CategoryItem'
   import MeetupItem from '@/components/MeetupItem'
   export default {
@@ -42,24 +42,23 @@
       CategoryItem,
       MeetupItem
     },
-    data () {
-      return {
-        meetups: [],
-        categories: []
+    
+    computed: {
+      meetups () {
+        return this.$store.state.meetups
+      },
+      categories () {
+        return this.$store.state.categories
       }
     },
-    created () {
-      axios.get('/api/v1/meetups')
-        .then(res => {
-          this.meetups = res.data
-        })
 
-      axios.get('/api/v1/categories')
-        .then(res => {
-          // debugger
-          this.categories = res.data
-        })
+    created () {
+
+      this.$store.dispatch('fetchMeetups')
+      this.$store.dispatch('fetchCategories')
+      
     }
+  
   }
 </script>
 

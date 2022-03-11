@@ -64,19 +64,20 @@
               <!-- Threads Start -->
               <p class="menu-label">Threads</p>
               <ul>
-                <li v-for="thread in threads" :key="thread._id">{{ thread.title }}</li>
+                <li v-for="thread in threads" :key="thread._id">
+                  {{ thread.title }}
+                </li>
               </ul>
               <p class="menu-label">Who is Going</p>
               <div class="columns is-multiline is-mobile">
                 <!-- Joined People Images Here -->
-                <div v-for="person in meetup.joinedPeople"
-                    :key="person._id" class="column is-3">
+                <div
+                  v-for="person in meetup.joinedPeople"
+                  :key="person._id"
+                  class="column is-3"
+                >
                   <figure class="image is-64x64">
-                    <img
-                      class="is-rounded"
-                      :src="person.avatar"
-                      alt="Image"
-                    />
+                    <img class="is-rounded" :src="person.avatar" alt="Image" />
                   </figure>
                 </div>
               </div>
@@ -116,13 +117,14 @@
                 </form>
                 <!-- Create new post END, handle later -->
                 <!-- Posts START -->
-                <article v-for="post in thread.posts" :key="post._id" class="media post-item">
+                <article
+                  v-for="post in thread.posts"
+                  :key="post._id"
+                  class="media post-item"
+                >
                   <figure class="media-left is-rounded user-image">
                     <p class="image is-32x32">
-                      <img
-                        class="is-rounded"
-                        :src="post.user.avatar"
-                      />
+                      <img class="is-rounded" :src="post.user.avatar" />
                     </p>
                   </figure>
                   <div class="media-content">
@@ -132,7 +134,9 @@
                         <strong class="author">{{ post.user.name }}</strong>
                         {{ " " }}
                         <!-- Post Updated at -->
-                        <small class="post-time">{{ post.updatedAt | formatDate('LLL') }}</small>
+                        <small class="post-time">{{
+                          post.updatedAt | formatDate("LLL")
+                        }}</small>
                         <br />
                         <p class="post-content-message">{{ post.text }}</p>
                       </div>
@@ -151,34 +155,28 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios"
 export default {
-  data() {
-    return {
-      meetup: {},
-      threads: []
-    };
+  computed: {
+    meetup() {
+        return this.$store.state.meetup
+    },
+    threads() {
+        return this.$store.state.threads
+    },
+    meetupCreator() {
+      return this.meetup.meetupCreator || {}
+    },
   },
 
   created() {
     const meetupId = this.$route.params.id;
 
-    axios.get(`/api/v1/meetups/${meetupId}`).then(res => {
-      this.meetup = res.data;
-    });
-
-    axios.get(`/api/v1/threads?meetupId=${meetupId}`)
-        .then(res => {
-          this.threads = res.data
-        })
-
+    this.$store.dispatch("fetchMeetupById", meetupId);
+    this.$store.dispatch("fetchThreads", meetupId);
   },
 
-  computed: {
-    meetupCreator() {
-      return this.meetup.meetupCreator || ''
-    },
-  },
+  
 };
 </script>
 
