@@ -18,7 +18,7 @@
             <div class="media-content">
               <div class="content">
                 <p>
-                  Created by <strong>{{ meetupCreator.name }}</strong>
+                  Created by: <strong>{{ meetupCreator.name }}</strong>
                 </p>
               </div>
             </div>
