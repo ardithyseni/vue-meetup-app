@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar is-spaced" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
+      <router-link class="navbar-item" :to="'/'">
         <h1 class="title is-4">VueMeetuper</h1>
-      </a>
+      </router-link>
       <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -13,9 +13,9 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
-        <a class="navbar-item">
+        <router-link class="navbar-item" :to="'/'">
           Home
-        </a>
+        </router-link>
 
         <a class="navbar-item">
           Find
