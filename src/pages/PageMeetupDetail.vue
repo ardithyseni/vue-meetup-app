@@ -155,29 +155,26 @@
 </template>
 
 <script>
-// import axios from "axios"
-export default {
-  computed: {
-    meetup() {
-        return this.$store.state.meetup
+  import { mapActions, mapState } from 'vuex'
+  export default {
+    computed: {
+      ...mapState({
+        meetup: state => state.meetup,
+        threads: state => state.threads
+      }),
+      meetupCreator () {
+        return this.meetup.meetupCreator || {}
+      }
     },
-    threads() {
-        return this.$store.state.threads
+    created () {
+      const meetupId = this.$route.params.id
+      this.fetchMeetupById(meetupId)
+      this.fetchThreads(meetupId)
     },
-    meetupCreator() {
-      return this.meetup.meetupCreator || {}
-    },
-  },
-
-  created() {
-    const meetupId = this.$route.params.id;
-
-    this.$store.dispatch("fetchMeetupById", meetupId);
-    this.$store.dispatch("fetchThreads", meetupId);
-  },
-
-  
-};
+    methods: {
+      ...mapActions(['fetchMeetupById', 'fetchThreads'])
+    }
+  }
 </script>
 
 

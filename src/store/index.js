@@ -17,12 +17,14 @@ export default new Vuex.Store({
 
     // like computed, it can return, filter, count, do functions
     getters: {
-        // meetups (state) {
-        //     return state.meetups
-        // },
-        // categories (state) {
-        //     return state.categories
-        // }
+        meetups (state) {
+            return state.meetups
+        },
+        categories (state) {
+            return state.categories
+        }
+
+        
     },
     
     // actions commit mutations.
