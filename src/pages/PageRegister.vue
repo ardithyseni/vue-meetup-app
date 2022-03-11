@@ -12,59 +12,120 @@
             <form>
               <div class="field">
                 <div class="control">
-                  <input v-model="form.username"
+                  <input
+                    v-model="form.username"
+                    @blur="$v.form.username.$touch()"
                     class="input is-large"
                     type="text"
                     placeholder="Username"
                   />
+                  <div v-if="$v.form.username.$error" class="form-error">
+                    <span
+                      v-if="!$v.form.username.required"
+                      class="help is-danger"
+                      >Username is required</span
+                    >
+                  </div>
                 </div>
               </div>
               <div class="field">
                 <div class="control">
-                  <input v-model="form.name"
+                  <input
+                    v-model="form.name"
+                    @blur="$v.form.name.$touch()"
                     class="input is-large"
                     type="text"
                     placeholder="Name"
                   />
+                  <div v-if="$v.form.name.$error" class="form-error">
+                    <span v-if="!$v.form.name.required" class="help is-danger"
+                      >Name is required</span
+                    >
+                  </div>
                 </div>
               </div>
               <div class="field">
                 <div class="control">
-                  <input v-model="form.email"
+                  <input
+                    v-model="form.email"
+                    @blur="$v.form.email.$touch()"
                     class="input is-large"
                     type="email"
                     placeholder="Your Email"
                   />
+                  <div v-if="$v.form.email.$error" class="form-error">
+                    <span v-if="!$v.form.email.required" class="help is-danger"
+                      >Email is required</span>
+                  </div>
                 </div>
               </div>
               <div class="field">
                 <div class="control">
-                  <input v-model="form.avatar"
+                  <input
+                    v-model="form.avatar"
+                    @blur="$v.form.avatar.$touch()"
                     class="input is-large"
                     type="text"
                     placeholder="Avatar"
                     autocomplete=""
                   />
+                  <div v-if="$v.form.avatar.$error" class="form-error">
+                    <span v-if="!$v.form.avatar.url" class="help is-danger"
+                      >URL format is not valid</span>
+                    <span v-if="!$v.form.avatar.supportedFileType" class="help is-danger"
+                      >Only .jpg, .jpeg and .png files are allowed</span>
+                  </div>
                 </div>
               </div>
               <div class="field">
                 <div class="control">
-                  <input v-model="form.password"
+                  <input
+                    v-model="form.password"
+                    @blur="$v.form.password.$touch()"
                     class="input is-large"
                     type="password"
                     placeholder="Your Password"
                     autocomplete="new-password"
                   />
+                  <div v-if="$v.form.password.$error" class="form-error">
+                    <span
+                      v-if="!$v.form.password.required"
+                      class="help is-danger"
+                      >Password is required</span
+                    >
+                    <span
+                      v-if="!$v.form.password.minLength"
+                      class="help is-danger"
+                      >Password should be at least 6 characters</span
+                    >
+                  </div>
                 </div>
               </div>
               <div class="field">
                 <div class="control">
-                  <input v-model="form.passwordConfirmation"
+                  <input
+                    v-model="form.passwordConfirmation"
+                    @blur="$v.form.passwordConfirmation.$touch()"
                     class="input is-large"
                     type="password"
                     placeholder="Password Confirmation"
                     autocomplete="off"
                   />
+                </div>
+                <div
+                  v-if="$v.form.passwordConfirmation.$error"
+                  class="form-error"
+                >
+                  <span
+                    v-if="!$v.form.passwordConfirmation.required"
+                    class="help is-danger"
+                    >Password is required</span
+                  >
+                  <span
+                    v-if="!$v.form.passwordConfirmation.sameAsPassword"
+                    class="help is-danger"
+                    >Password confirmation should be same as password</span
+                  >
                 </div>
               </div>
               <button
@@ -88,6 +149,16 @@
 </template>
 
 <script>
+import {
+  required,
+  email,
+  minLength,
+  url,
+  sameAs
+} from "vuelidate/lib/validators"
+
+import { supportedFileType } from '@/helpers/validators' 
+
 export default {
   data() {
     return {
@@ -102,12 +173,39 @@ export default {
     };
   },
 
-    methods: {
-        register () {
-            this.$store.dispatch('auth/registerUser', this.form)
-        }
-    }
+  validations: {
+    form: {
+      username: {
+        required,
+      },
+      name: {
+        required,
+      },
+      email: {
+        required,
+        email,
+      },
+      avatar: {
+        url,
+        supportedFileType
+      },
+      password: {
+        required,
+        minLength: minLength(6),
+      },
+      passwordConfirmation: {
+        required,
+        sameAsPassword: sameAs("password"),
+      },
+    },
+  },
 
+  methods: {
+    register() {
+      this.$v.form.$touch();
+      this.$store.dispatch("auth/registerUser", this.form);
+    },
+  },
 };
 </script>
 
