@@ -60,12 +60,12 @@
   export default {
     computed: {
         meetups() {
-            return this.$store.state.meetups
+            return this.$store.state.meetups.items
         }
     },
 
     created () {
-        this.$store.dispatch('fetchMeetups')
+        this.$store.dispatch('meetups/fetchMeetups')
       
     }
   }
