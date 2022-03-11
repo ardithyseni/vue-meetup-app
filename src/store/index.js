@@ -28,60 +28,55 @@ export default new Vuex.Store({
     // actions commit mutations.
     // Actions can contain arbitrary asynchronous operations.
     // good spot to fetch data. Action call usually should resolve into data. 
+    
     actions: {
         fetchMeetups ({state, commit}) {
-            axios.get('/api/v1/meetups')
-                .then(res => {
-                const meetups = res.data
-                commit('setMeetups', meetups)
-                return state.meetups
+          commit('setItems', {resource: 'meetups', items: []})
+          axios.get('/api/v1/meetups')
+            .then(res => {
+              const meetups = res.data
+              commit('setItems', {resource: 'meetups', items: meetups})
+              return state.meetups
             })
-
         },
-
         fetchCategories ({state, commit}) {
-            axios.get('/api/v1/categories')
-                .then(res => {
-                const categories = res.data
-                commit('setCategories', categories)
-                return state.categories
+          axios.get('/api/v1/categories')
+            .then(res => {
+              const categories = res.data
+              commit('setItems', {resource: 'categories', items: categories})
+              return state.categories
             })
         },
-
         fetchMeetupById ({state, commit}, meetupId) {
-            axios.get(`/api/v1/meetups/${meetupId}`).then(res => {
-               const meetup = res.data;
-               commit('setMeetup', meetup)
-               return state.meetup
-            });
-        },
-
-        fetchThreads ({state, commit}, meetupId) {
-            axios.get(`/api/v1/threads?meetupId=${meetupId}`)
-                .then(res => {
-                const threads = res.data
-                commit('setThreads', threads)
-                return state.threads
+          commit('setItem', {resource: 'meetup', item: {}})
+          axios.get(`/api/v1/meetups/${meetupId}`)
+            .then(res => {
+              const meetup = res.data
+              commit('setItem', {resource: 'meetup', item: meetup})
+              return state.meetup
             })
-        }   
-    },
+        },
+        fetchThreads ({state, commit}, meetupId) {
+          axios.get(`/api/v1/threads?meetupId=${meetupId}`)
+            .then(res => {
+              const threads = res.data
+              commit('setItems', {resource: 'threads', items: threads})
+              return state.threads
+            })
+        }
+      },
 
     // The only way to actually change 
     // state in a Vuex store is by committing a mutation.
     mutations: {
-        setMeetups (state, meetups) {
-            state.meetups = meetups
+
+        setItems (state, {resource, items}) {
+            state[resource] = items
         },
 
-        setMeetup (state, meetup) {
-            state.meetup = meetup
+        setItem (state, {resource, item}) {
+            state[resource] = item
         },
-        
-        setCategories (state, categories) {
-            state.categories = categories
-        },
-        setThreads (state, threads) {
-            state.threads = threads
-        }
+
     }
   })
