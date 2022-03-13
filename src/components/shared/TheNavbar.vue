@@ -47,7 +47,7 @@
           <div class="navbar-dropdown">
             <a href="#" class="navbar-item"> Profile </a>
             <hr class="navbar-divider" />
-            <a class="navbar-item"> Logout </a>
+            <a @click.prevent="logOut" class="navbar-item"> Logout </a>
           </div>
         </div>
         <div v-else class="navbar-item has-dropdown">
@@ -76,6 +76,13 @@ export default {
       user: "auth/authUser",
     }),
   },
+
+  methods: {
+    logOut () {
+      this.$store.dispatch('auth/logout')
+    }
+  }, 
+
 };
 </script>
 

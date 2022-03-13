@@ -7,6 +7,7 @@ export default {
 
     state: {
         user: null,
+        isAuthResolved: false
     },
 
     getters: {
@@ -32,26 +33,46 @@ export default {
             return axios.post('/api/v1/users/register', userData)
         },
 
-        getAuthUser ({commit}) {
-            return axios.get('/api/v1/users/me')
-                .then((res) => {
-                    const user = res.data
-                    commit('setAuthUser', user)
-                    return user
-                })
-                .catch(err => {
+        logout ({commit}) {
+            return axios.post('/api/v1/users/logout')
+                .then(() => {
                     commit('setAuthUser', null)
-                    console.log(err)
-                    return undefined
-                    
+                    return true
                 })
-        }
+                .catch(err => { console.log(err) })
+        },
+
+        getAuthUser ({commit, getters}) {
+            
+            const authUser = getters['authUser']
+            
+            if (authUser) { return Promise.resolve(authUser) }
+
+            return axios.get('/api/v1/users/me')
+            .then((res) => {
+                const user = res.data
+                commit('setAuthUser', user)
+                commit('setAuthState', true)
+                return user
+            })
+            .catch(err => {
+                commit('setAuthUser', null)
+                commit('setAuthState', true)
+                console.log(err)
+                return undefined
+                
+            })
+        },
+        
 
     },
 
     mutations: {
         setAuthUser (state, user) {
             return state.user = user
+        },
+        setAuthState (state, authState) {
+            return state.isAuthResolved = authState
         }
     }
 
