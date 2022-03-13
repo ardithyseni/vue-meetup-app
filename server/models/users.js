@@ -30,7 +30,6 @@ const userSchema = new Schema({
   joinedMeetups: [{ type: Schema.Types.ObjectId, ref: 'Meetup' }]
 });
 
-//encryption using bcrypt
 userSchema.pre("save", function(next){
    const user = this;
 
@@ -46,7 +45,7 @@ userSchema.pre("save", function(next){
    });
 });
 
-//Every user have access to this methods
+//Every user have acces to this methods
 userSchema.methods.comparePassword = function(candidatePassword, callback){
    bcrypt.compare(candidatePassword, this.password, function(err, isMatch){
       if(err) {return callback(err);}

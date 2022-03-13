@@ -1,8 +1,6 @@
 const User = require('../models/users');
 const passport = require('passport');
 
-
-
 exports.getUsers = function(req, res) {
   User.find({})
         .exec((errors, users) => {
@@ -15,8 +13,8 @@ exports.getUsers = function(req, res) {
   });
 }
 
-exports.register = function(req, res) {
 
+exports.register = function(req, res) {
   const registerData = req.body
 
   if (!registerData.email) {
@@ -35,14 +33,13 @@ exports.register = function(req, res) {
     })
   }
 
-  if ( registerData.password != registerData.passwordConfirmation ) {
+  if (registerData.password !== registerData.passwordConfirmation) {
     return res.status(422).json({
       errors: {
-        password: 'is not equal as confirmation password'
+        password: 'is not the same as confirmation password'
       }
     })
   }
-
 
   const user = new User(registerData);
 
@@ -50,18 +47,12 @@ exports.register = function(req, res) {
     if (errors) {
       return res.status(422).json({errors})
     }
+
     return res.json(savedUser)
   })
-
 }
 
-
-
-
-
-
-exports.login = function (req, res) {
-
+exports.login = function (req, res, next) {
   const { email, password } = req.body
 
   if (!email) {
@@ -81,8 +72,24 @@ exports.login = function (req, res) {
   }
 
   return passport.authenticate('local', (err, passportUser) => {
+    if (err) {
+      return next(err)
+    }
 
-  })
+    if (passportUser) {
+      req.login(passportUser, function (err) {
+        if (err) { next(err); }
 
+        return res.json(passportUser)
+      });
 
+    } else {
+      return res.status(422).send({errors: {
+        'authentication': 'Ooops, something went wrong!'
+      }})
+    }
+
+  })(req, res, next)
 }
+
+

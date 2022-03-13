@@ -14,12 +14,13 @@ const store = new MongoDBStore({
 
 store.on('error', (error) => console.log(error))
 
-
 require("./models/meetups");
 require("./models/users");
 require("./models/threads");
 require("./models/posts");
 require("./models/categories");
+
+require("./services/passport");
 
 const meetupsRoutes = require('./routes/meetups'),
       usersRoutes = require('./routes/users'),
@@ -36,15 +37,14 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use(session({ secret: config.SESSION_SECRET,
-  cookie: { maxAge: 3600000 },
-  resave: false,
-  saveUninitialized: false,
-  store
-}))
+                  cookie: { maxAge: 3600000 },
+                  resave: false,
+                  saveUninitialized: false,
+                  store
+                }))
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use('/api/v1/meetups', meetupsRoutes);
 app.use('/api/v1/users', usersRoutes);
