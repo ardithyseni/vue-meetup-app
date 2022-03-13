@@ -1,20 +1,59 @@
 
+import axios from 'axios'
 
 export default {
     
     namespaced: true,
 
     state: {
+        user: null,
+    },
 
+    getters: {
+        authUser (state) {
+            return state.user || null
+        },
+        isAuthenticated (state) {
+            return !!state.user  // returns true or false depending do we have user
+        },
     },
 
     actions: {
-        loginWithEmailAndPassword (context, userData) {
-            console.log(userData)
+        loginWithEmailAndPassword ({commit}, userData) {
+            return axios.post('/api/v1/users/login', userData)
+                .then(res => {
+                    const user = res.data
+                    commit('setAuthUser', user)
+
+                })
         },
+        
         registerUser (context, userData) {
-            console.log(userData)
+            return axios.post('/api/v1/users/register', userData)
+        },
+
+        getAuthUser ({commit}) {
+            return axios.get('/api/v1/users/me')
+                .then((res) => {
+                    const user = res.data
+                    commit('setAuthUser', user)
+                    return user
+                })
+                .catch(err => {
+                    commit('setAuthUser', null)
+                    console.log(err)
+                    return undefined
+                    
+                })
+        }
+
+    },
+
+    mutations: {
+        setAuthUser (state, user) {
+            return state.user = user
         }
     }
+
 
 }

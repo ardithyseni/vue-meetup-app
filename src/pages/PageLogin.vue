@@ -96,7 +96,9 @@ export default {
     login() {
       this.$v.form.$touch()
       // console.log(this.$v)
-      this.$store.dispatch("auth/loginWithEmailAndPassword", this.form);
+      this.$store.dispatch("auth/loginWithEmailAndPassword", this.form)
+        .then(() => this.$router.push('/')) // redirect to home page
+        .catch((err) => console.log(err))
     },
   },
 };

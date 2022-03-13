@@ -20,6 +20,10 @@ export default {
     // PageHome,
     TheNavbar,
     TheFooter
+  },
+
+  created () {
+    this.$store.dispatch('auth/getAuthUser')
   }
 }
 </script>
