@@ -11,7 +11,7 @@ cd server
 node index.js
 ```
 
-### Compiles and hot-reloads for development (server-side)
+### Compiles and hot-reloads for development (client-side)
 ```
 npm run serve
 ```
