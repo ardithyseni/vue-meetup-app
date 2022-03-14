@@ -13,7 +13,7 @@
       </div>
       <div>
         <span class="result-title"> Start Date </span>
-        <p>{{ meetupToCreate.startDate }}</p>
+        <p>{{ meetupToCreate.startDate | formatDate }}</p>
       </div>
       <div>
         <span class="result-title"> From </span>
