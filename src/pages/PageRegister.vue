@@ -176,10 +176,10 @@ export default {
   validations: {
     form: {
       username: {
-        required,
+        // required,
       },
       name: {
-        required,
+        // required,
       },
       email: {
         required,
@@ -201,12 +201,18 @@ export default {
   },
 
   methods: {
-    register() {
-      this.$v.form.$touch();
-      this.$store.dispatch("auth/registerUser", this.form)
+    register () {
+      this.$v.form.$touch()
+      this.$store.dispatch('auth/registerUser', this.form)
         .then(() => this.$router.push('/login'))
-          .catch(err => console.log(err))
-    },
+        .catch(errorMessage => {
+          this.$toasted.error(errorMessage, {
+            theme: "outline",
+            position: "top-center",
+            duration: 5000,
+          });
+        })
+    }
   },
 };
 </script>

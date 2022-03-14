@@ -105,10 +105,9 @@ export default {
       this.$v.form.$touch();
       this.$store
         .dispatch("auth/loginWithEmailAndPassword", this.form)
-        .then(() => this.$router.push("/"))
-        .catch((err) => {
-          const error = err.response.data.errors.message;
-          this.$toasted.error(error, {
+        .then(() => this.$router.push('/'))
+        .catch((errorMessage) => {
+          this.$toasted.error(errorMessage, {
             theme: "outline",
             position: "top-center",
             duration: 5000,
