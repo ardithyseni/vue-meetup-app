@@ -43,26 +43,28 @@ export default {
         },
 
         getAuthUser ({commit, getters}) {
-            
             const authUser = getters['authUser']
-            
             if (authUser) { return Promise.resolve(authUser) }
-
-            return axios.get('/api/v1/users/me')
-            .then((res) => {
+      
+            const config = {
+              headers: {
+                'Cache-Control': 'no-cache'
+              }
+            }
+      
+            return axios.get('/api/v1/users/me', config)
+              .then((res) => {
                 const user = res.data
                 commit('setAuthUser', user)
                 commit('setAuthState', true)
                 return user
-            })
-            .catch(err => {
+              })
+              .catch(err => {
                 commit('setAuthUser', null)
                 commit('setAuthState', true)
-                console.log(err)
-                return undefined
-                
-            })
-        },
+                return err
+              })
+        }
         
 
     },
