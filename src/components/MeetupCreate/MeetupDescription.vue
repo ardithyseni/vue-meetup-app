@@ -1,8 +1,9 @@
 <template>
-  <form class="m-b-md">
+  <form @input="emitFormData" class="m-b-md">
     <div class="field">
       <label class="title">Image</label>
       <input v-model="form.image"
+            @blur="$v.form.image.$touch()"
              class="input"
              type="text"
              placeholder="Image URL">
@@ -13,6 +14,7 @@
     <div class="field">
       <label class="title">Additional Info</label>
       <textarea v-model="form.shortInfo"
+                @blur="$v.form.shortInfo.$touch()"
                 class="textarea"
                 placeholder="Write Short Info"
                 rows="3"></textarea>
@@ -23,6 +25,7 @@
     <div class="field">
       <label class="title">Long Description</label>
       <textarea v-model="form.description"
+                @blur="$v.form.description.$touch()"
                 class="textarea"
                 placeholder="Write description"
                 rows="10"></textarea>
@@ -57,6 +60,11 @@
           required
         }
       }
+    },
+    methods: {
+        emitFormData () {
+           this.$emit('stepUpdated', {data: this.form, isValid: !this.$v.$invalid})
+        }
     }
   }
 </script>
