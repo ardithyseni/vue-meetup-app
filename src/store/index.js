@@ -43,5 +43,9 @@ export default new Vuex.Store({
             state[resource].item = item
         },
 
+        addItemToArray (state, {item, index, resource}) {
+            Vue.set(state[resource].items, index, item)
+        }
+
     }
   })
