@@ -2,7 +2,7 @@ import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import axiosInstance from '@/services/axios'
 import { rejectError } from '@/helpers'
-
+import Vue from 'vue'
 
 function checkTokenValidity (token) {
     if (token) {
@@ -27,6 +27,15 @@ function checkTokenValidity (token) {
       },
       isAuthenticated (state) {
         return !!state.user
+      },
+      isMeetupOwner: (state) => (meetupCreatorId) => {
+        if (!state.user) return false
+        return state.user._id === meetupCreatorId
+      },
+      isMember: (state) => (meetupId) => {
+        return state.user &&
+               state.user['joinedMeetups'] &&
+               state.user['joinedMeetups'].includes(meetupId)
       }
     },
     actions: {
@@ -86,6 +95,17 @@ function checkTokenValidity (token) {
             commit('setAuthState', true)
             return err
           })
+      },
+      addMeetupToAuthUser ({commit, state}, meetupId) {
+        const userMeetups = [...state.user['joinedMeetups'], meetupId]
+        commit('setMeetupsToAuthUser', userMeetups)
+      },
+      removeMeetupFromAuthUser ({commit, state}, meetupId) {
+        const userMeetupsIds = [...state.user['joinedMeetups']]
+        const index = userMeetupsIds.findIndex(userMeetupId => userMeetupId === meetupId)
+  
+        userMeetupsIds.splice(index, 1)
+        commit('setMeetupsToAuthUser', userMeetupsIds)
       }
     },
     mutations: {
@@ -94,6 +114,9 @@ function checkTokenValidity (token) {
       },
       setAuthState (state, authState) {
         return state.isAuthResolved = authState
+      },
+      setMeetupsToAuthUser (state, meetups) {
+        return Vue.set(state.user, 'joinedMeetups', meetups)
       }
     }
   }
