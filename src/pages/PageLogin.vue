@@ -22,8 +22,12 @@
                     autocomplete="email"
                   />
                   <div v-if="$v.form.email.$error" class="form-error">
-                    <span v-if="!$v.form.email.required" class="help is-danger">Email is required</span>
-                    <span v-if="!$v.form.email.email" class="help is-danger">Email not valid</span>
+                    <span v-if="!$v.form.email.required" class="help is-danger"
+                      >Email is required</span
+                    >
+                    <span v-if="!$v.form.email.email" class="help is-danger"
+                      >Email not valid</span
+                    >
                   </div>
                 </div>
               </div>
@@ -38,7 +42,11 @@
                     autocomplete="current-password"
                   />
                   <div v-if="$v.form.password.$error" class="form-error">
-                    <span v-if="!$v.form.password.required" class="help is-danger">Password is required</span>
+                    <span
+                      v-if="!$v.form.password.required"
+                      class="help is-danger"
+                      >Password is required</span
+                    >
                     <!-- <span v-if="!$v.form.password.password" class="help is-danger">Incorrect Password</span> -->
                   </div>
                 </div>
@@ -65,7 +73,7 @@
 </template>
 
 <script>
-import { required, email } from "vuelidate/lib/validators"
+import { required, email } from "vuelidate/lib/validators";
 export default {
   data() {
     return {
@@ -80,7 +88,7 @@ export default {
     form: {
       email: {
         required,
-        email
+        email,
       },
       password: {
         required,
@@ -88,17 +96,24 @@ export default {
     },
   },
   computed: {
-    isFormInvalid () {
-      return this.$v.form.$invalid
+    isFormInvalid() {
+      return this.$v.form.$invalid;
     },
   },
   methods: {
     login() {
-      this.$v.form.$touch()
-      // console.log(this.$v)
-      this.$store.dispatch("auth/loginWithEmailAndPassword", this.form)
-        .then(() => this.$router.push('/')) // redirect to home page
-        .catch((err) => console.log(err))
+      this.$v.form.$touch();
+      this.$store
+        .dispatch("auth/loginWithEmailAndPassword", this.form)
+        .then(() => this.$router.push("/"))
+        .catch((err) => {
+          const error = err.response.data.errors.message;
+          this.$toasted.error(error, {
+            theme: "outline",
+            position: "top-center",
+            duration: 5000,
+          });
+        });
     },
   },
 };
