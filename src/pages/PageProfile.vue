@@ -13,12 +13,13 @@
           <div class="column is-4-tablet is-10-mobile name">
             <p>
               <!-- TODO: Display user name here -->
+              <span class="title is-bold">{{ user.name }}</span>
+              <br />
+              <br />
               <span class="title is-bold">{{ user.username }}</span>
               <br />
               <!-- Here will be user update functionality -->
-              <button class="button is-primary is-outlined m-t-sm">
-                Update Info
-              </button>
+              <UserUpdateModal :authUser="user" @userSubmitted="updateUser" />
               <br />
             </p>
             <!-- TODO: User Info Here if any -->
@@ -28,6 +29,8 @@
           </div>
           <!-- TODO: Set Active Tab to 'meetups' and class to 'isActive' -->
           <div
+            @click="activeTab = 'meetups'"
+            :class="{ isActive: activeTab === 'meetups' }"
             class="stats-tab column is-2-tablet is-4-mobile has-text-centered"
           >
             <p class="stat-val">{{ meetupsCount }}</p>
@@ -35,6 +38,8 @@
           </div>
           <!-- TODO: Set Active Tab to 'threads' and class to 'isActive' -->
           <div
+            :class="{ isActive: activeTab === 'threads' }"
+            @click="activeTab = 'threads'"
             class="stats-tab column is-2-tablet is-4-mobile has-text-centered"
           >
             <p class="stat-val">{{ threadsCount }}</p>
@@ -42,6 +47,8 @@
           </div>
           <!-- TODO: Set Active Tab to 'posts' and class to 'isActive' -->
           <div
+            :class="{ isActive: activeTab === 'posts' }"
+            @click="activeTab = 'posts'"
             class="stats-tab column is-2-tablet is-4-mobile has-text-centered"
           >
             <p class="stat-val">{{ postsCount }}</p>
@@ -50,7 +57,10 @@
         </div>
       </div>
       <!-- TODO: Display this div when activeTab === 'meetups' -->
-      <div class="columns is-mobile is-multiline">
+      <div
+        v-if="activeTab === 'meetups'"
+        class="columns is-mobile is-multiline"
+      >
         <!-- TODO: Iterate over meetups -->
         <div
           v-for="meetup in meetups"
@@ -94,7 +104,10 @@
         </div>
       </div>
       <!-- TODO: Display this div when activeTab === 'threads' -->
-      <div class="columns is-mobile is-multiline">
+      <div
+        v-if="activeTab === 'threads'"
+        class="columns is-mobile is-multiline"
+      >
         <!-- TODO: Iterate over threads -->
         <div
           v-for="thread in threads"
@@ -120,7 +133,7 @@
         </div>
       </div>
       <!-- TODO: Display this div when activeTab === 'posts' -->
-      <div class="columns is-mobile is-multiline">
+      <div v-if="activeTab === 'posts'" class="columns is-mobile is-multiline">
         <!-- TODO: Iterate over posts -->
         <div
           v-for="post in posts"
@@ -151,24 +164,52 @@
 
 <script>
 import { mapState } from "vuex";
+import UserUpdateModal from "@/components/UserUpdateModal";
 export default {
-    
-    computed: {
-        ...mapState({
-        user: state => state.auth.user,
-        meetups: state => state.stats.meetups.data,
-        threads: state => state.stats.threads.data,
-        posts: state => state.stats.posts.data,
-        meetupsCount: state => state.stats.meetups.count,
-        threadsCount: state => state.stats.threads.count,
-        postsCount: state => state.stats.posts.count
-      })
-    },
+  components: {
+    UserUpdateModal,
+  },
+
+  data() {
+    return {
+      activeTab: "meetups",
+    };
+  },
+
+  computed: {
+    ...mapState({
+      user: (state) => state.auth.user,
+      meetups: (state) => state.stats.meetups.data,
+      threads: (state) => state.stats.threads.data,
+      posts: (state) => state.stats.posts.data,
+      meetupsCount: (state) => state.stats.meetups.count,
+      threadsCount: (state) => state.stats.threads.count,
+      postsCount: (state) => state.stats.posts.count,
+    }),
+  },
 
   created() {
     this.$store
       .dispatch("stats/fetchUserStats")
       .then((stats) => console.log(stats));
+  },
+
+  methods: {
+    updateUser({ user, done }) {
+      this.$store
+        .dispatch("auth/updateUser", user)
+        .then(() => {
+          this.$toasted.success("Profile Updated", {
+            position: "top-center",
+            duration: 3000,
+          });
+          done();
+        })
+        .catch((err) => {
+          console.log(err);
+          done();
+        });
+    },
   },
 };
 </script>
