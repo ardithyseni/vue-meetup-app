@@ -24,16 +24,28 @@ require("./models/categories");
 require("./services/passport");
 
 const meetupsRoutes = require('./routes/meetups'),
-      usersRoutes = require('./routes/users'),
-      threadsRoutes = require('./routes/threads'),
-      postsRoutes = require('./routes/posts'),
-      categoriesRoutes = require('./routes/categories');
+  usersRoutes = require('./routes/users'),
+  threadsRoutes = require('./routes/threads'),
+  postsRoutes = require('./routes/posts'),
+  categoriesRoutes = require('./routes/categories');
 
 mongoose.connect(config.DB_URI, { useNewUrlParser: true })
   .then(() => console.log('DB Connected!'))
   .catch(err => console.log(err));
 
 const app = express();
+
+const server = require('http').createServer(app)
+const io = require("socket.io")(server, { // fixed se nuk lejke pa keto
+  cors: {
+    origin: "http://localhost:8080",
+    methods: ["GET", "POST"]
+  }
+});
+
+require('./socket')(io)
+
+
 
 app.use(bodyParser.json());
 
@@ -59,6 +71,8 @@ app.use('/api/v1/categories', categoriesRoutes);
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT , function() {
+server.listen(PORT, function () {
   console.log('App is running on port: ' + PORT);
 });
+
+

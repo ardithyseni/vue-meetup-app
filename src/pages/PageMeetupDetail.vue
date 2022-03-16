@@ -167,6 +167,12 @@ export default {
     const meetupId = this.$route.params.id;
     this.fetchMeetupById(meetupId);
     this.fetchThreads(meetupId);
+
+    this.$root.socket.on('meetup/postPublished', function(post) {
+      alert(post.text)
+      console.log(post.text)
+    })
+
   },
   methods: {
     ...mapActions("meetups", ["fetchMeetupById"]),
