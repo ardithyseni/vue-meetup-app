@@ -46,7 +46,6 @@
   import { mapActions, mapState, mapGetters } from 'vuex'
   import pageLoader from '@/mixins/pageLoader'
 
-
   export default {
     components: {
       CategoryItem,
@@ -73,6 +72,7 @@
 
     created () {
       
+
       // once all the promises are resolved then stop spinner
       Promise.all([this.fetchMeetups(), this.fetchCategories()])
         .then(() => this.pageLoader_resolveData())
