@@ -10,6 +10,7 @@ import threads from './modules/threads'
 import categories from './modules/categories'
 import auth from './modules/auth'
 import stats from './modules/stats'
+import meta from './modules/meta'
 
 export default new Vuex.Store({
 
@@ -18,7 +19,8 @@ export default new Vuex.Store({
         threads,
         categories,
         auth,
-        stats
+        stats,
+        meta
     },
 
     // in state we keep our data, sharing with the components

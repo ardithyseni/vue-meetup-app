@@ -14,6 +14,7 @@
 // import  PageHome from '@/pages/PageHome'
 import TheNavbar from '@/components/shared/TheNavbar'
 import TheFooter from '@/components/shared/TheFooter'
+
 export default {
   name: 'app',
   components: {
@@ -26,8 +27,14 @@ export default {
     isAuthResolved () {
       return this.$store.state.auth.isAuthResolved
     }
+  },
+
+  created () {
+    this.$store.dispatch('meta/fetchMetaData')
   }
 }
+
+
 </script>
 
 <style lang="scss">
