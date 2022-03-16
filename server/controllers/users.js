@@ -1,4 +1,5 @@
 const User = require('../models/users');
+const Meetup = require('../models/meetups');
 const Thread = require('../models/threads');
 const Post = require('../models/posts');
 const Category = require('../models/categories');
@@ -84,8 +85,8 @@ exports.login = function (req, res, next) {
   if (!password) {
     return res.status(422).json({
       errors: {
-        email: 'is required',
-        message: 'Email is required'
+        password: 'is required',
+        message: 'Password is required'
       }
     })
   }
@@ -119,7 +120,6 @@ exports.logout = function (req, res) {
   return res.json({status: 'Session destroyed!'})
 }
 
-
 // @facet
 // Processes multiple aggregation pipelines within a single stage on the same set of input documents.
 // Each sub-pipeline has its own field in the output document where its results are stored as an array of documents.
@@ -133,7 +133,7 @@ exports.logout = function (req, res) {
 //               don't return data but count of all meetups
 
 function fetchMeetupsByUserQuery (userId) {
-  return Meetup.aggregate([ // form or group into a class or cluster.
+  return Meetup.aggregate([
     { "$facet": {
       "meetups": [
         { "$match": {"meetupCreator": userId}},
@@ -220,6 +220,7 @@ exports.getUserActivity = function (req, res) {
      fetchPostByUserQuery(userId)
     ])
     // Writing [] to get data from the array
+
     .then(([meetups, threads, posts]) => res.json({meetups, threads, posts}))
     .catch(err => {
       console.log(err)
@@ -236,9 +237,11 @@ exports.updateUser = (req, res) => {
     // new: bool - true to return the modified document rather than the original. defaults to false
     User.findByIdAndUpdate(userId, { $set: userData}, { new: true }, (errors, updatedUser) => {
       if (errors) return res.status(422).send({errors});
+
       return res.json(updatedUser);
     });
   } else {
     return res.status(422).send({errors: 'Authorization Error!'})
   }
 }
+

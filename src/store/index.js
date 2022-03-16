@@ -9,6 +9,7 @@ import meetups from './modules/meetups'
 import threads from './modules/threads'
 import categories from './modules/categories'
 import auth from './modules/auth'
+import stats from './modules/stats'
 
 export default new Vuex.Store({
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
         meetups,
         threads,
         categories,
-        auth
+        auth,
+        stats
     },
 
     // in state we keep our data, sharing with the components
