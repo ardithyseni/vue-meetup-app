@@ -27,7 +27,7 @@
               {{ " " }}
               <!-- Post Updated at -->
               <small class="post-time">{{
-                post.updatedAt | formatDate("LLL")
+                post.updatedAt | fromNow
               }}</small>
               <br />
               <p class="post-content-message">{{ post.text }}</p>

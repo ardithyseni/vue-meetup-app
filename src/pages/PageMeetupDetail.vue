@@ -170,20 +170,24 @@ export default {
 
     if (this.isAuthenticated) {
       this.$socket.emit('meetup/subscribe', meetupId) // from server socket index.js
-      this.$socket.on('meetup/postPublished', 
-        (post) => this.addPostToThread({post, threadId: post.thread}))
+      this.$socket.on('meetup/postPublished', this.addPostToThreadHandler)
     }
 
   },
   // lifecycle function, me u unsubscribe masi tkryhet sessioni i shkurt
   destroyed () {
-    this.$socket.removeListener('meetup/postPublished', this.addPostToThread)
-    this.$socket.emit('meetup/unsubscribe')
+    this.$socket.removeListener('meetup/postPublished', this.addPostToThreadHandler)
+    this.$socket.emit('meetup/unsubscribe', this.meetup._id)
   },  
 
   methods: {
     ...mapActions("meetups", ["fetchMeetupById"]), // from src store modules meetups
     ...mapActions("threads", ["fetchThreads", "postThread", "addPostToThread"]), // from store modules threads
+    
+    addPostToThreadHandler (post) {
+      this.addPostToThread({post, threadId: post.thread})
+    },
+    
     joinMeetup () {
       this.$store.dispatch('meetups/joinMeetup', this.meetup._id)
     },
