@@ -7,7 +7,7 @@ exports.getMeta = function(req, res) {
     if (!error && response.statusCode == 200) {
         const ip = JSON.parse(response.body).ip;
         const geo = geoip.lookup(ip);
-        console.log(geo)
+        // console.log(geo)
         return res.json(geo);
     } else {
       return res.send(422).send({errors: 'Cannot get location from IP'})
