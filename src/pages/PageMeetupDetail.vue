@@ -130,6 +130,13 @@ export default {
     ThreadList
   },
 
+  data () {
+    return {
+      threadPageNum: 1,
+      threadPageSize: 5
+    }
+  },
+
   computed: {
     ...mapState({
       meetup: (state) => state.meetups.item,
@@ -166,7 +173,7 @@ export default {
   created() {
     const meetupId = this.$route.params.id;
     this.fetchMeetupById(meetupId);
-    this.fetchThreads(meetupId);
+    this.fetchThreadsHandler({meetupId});
 
     if (this.isAuthenticated) {
       this.$socket.emit('meetup/subscribe', meetupId) // from server socket index.js
@@ -184,6 +191,17 @@ export default {
     ...mapActions("meetups", ["fetchMeetupById"]), // from src store modules meetups
     ...mapActions("threads", ["fetchThreads", "postThread", "addPostToThread"]), // from store modules threads
     
+    fetchThreadsHandler ({meetupId}) {
+      const filter = {
+        pageNum: this.threadPageNum,
+        pageSize: this.threadPageSize
+      }
+      this.fetchThreads({meetupId, filter})
+        .then(() => {
+          this.threadPageNum++
+        })
+    },
+    
     addPostToThreadHandler (post) {
       this.addPostToThread({post, threadId: post.thread})
     },
@@ -191,9 +209,11 @@ export default {
     joinMeetup () {
       this.$store.dispatch('meetups/joinMeetup', this.meetup._id)
     },
+
     leaveMeetup () {
       this.$store.dispatch('meetups/leaveMeetup', this.meetup._id)
     },
+
     createThread ({title, closeModal}) {
       this.postThread({title, meetupId: this.meetup._id})
         .then(() => {
@@ -201,6 +221,7 @@ export default {
           this.$toasted.success('Thread created', {duration: 3000})
         })
     }
+    
   },
 };
 </script>

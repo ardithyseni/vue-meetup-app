@@ -1,21 +1,26 @@
 import Vue from 'vue'
 import axios from 'axios'
 import axiosInstance from '@/services/axios'
+import { applyFilters } from '@/helpers';
 
 export default {
   namespaced: true,
 
   state: {
+    areThreadsLoaded: false,
     items: []
   },
   actions: {
-    fetchThreads ({state, commit}, meetupId) {
-      return axios.get(`/api/v1/threads?meetupId=${meetupId}`)
-        .then(res => {
-          const threads = res.data
-          commit('setItems', {resource: 'threads', items: threads}, {root: true})
-          return state.items
-        })
+    fetchThreads ({state, commit}, {meetupId, filter ={}}) {
+      const url = applyFilters(`/api/v1/threads?meetupId=${meetupId}`, filter)
+        
+      return axios.get(url)
+      .then(res => {
+        const {threads, isAllDataLoaded} = res.data
+        commit('setAllDataLoaded', isAllDataLoaded)
+        commit('setItems', {resource: 'threads', items: threads}, {root: true})
+        return state.items
+      })
     },
     postThread ({commit, state}, {title, meetupId}) {
       const thread = {}
@@ -55,6 +60,10 @@ export default {
   mutations: {
     savePostToThread (state, {posts, index}) {
       Vue.set(state.items[index], 'posts', posts)
+    },
+
+    setAllDataLoaded (state, isAllDataLoaded) {
+      state.areThreadsLoaded = isAllDataLoaded
     }
   }
 }
