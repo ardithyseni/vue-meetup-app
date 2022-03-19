@@ -62,60 +62,68 @@
         class="columns is-mobile is-multiline"
       >
         <!-- TODO: Iterate over meetups -->
-        <div
-          v-for="meetup in meetups"
-          :key="meetup._id"
-          class="column is-3-tablet is-6-mobile"
-        >
-          <!-- THREADS -->
-          <div class="card">
-            <div class="card-image">
-              <figure class="image is-4by3">
-                <!-- TODO: Display Meetup Image -->
-                <img :src="meetup.image" />
-              </figure>
-            </div>
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <!-- TODO: Display Meetup title -->
-                  <p class="title is-4">{{ meetup.title }}</p>
-                  <!-- TODO: Display Category name -->
-                  <p class="subtitle is-6">
-                    <span class="tag is-dark subtitle">{{
-                      meetup.category.name | capitalize
-                    }}</span>
+        <template v-if="meetups && meetups.length > 0">
+          <div
+            v-for="meetup in meetups"
+            :key="meetup._id"
+            class="column is-3-tablet is-6-mobile"
+          >
+            <!-- THREADS -->
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-4by3">
+                  <!-- TODO: Display Meetup Image -->
+                  <img :src="meetup.image" />
+                </figure>
+              </div>
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <!-- TODO: Display Meetup title -->
+                    <p class="title is-4">{{ meetup.title }}</p>
+                    <!-- TODO: Display Category name -->
+                    <p class="subtitle is-6">
+                      <span class="tag is-dark subtitle">{{
+                        meetup.category.name | capitalize
+                      }}</span>
+                    </p>
+                  </div>
+                </div>
+                <div class="content">
+                  <!-- TODO: Display Meetup shortInfo -->
+                  <p>
+                    {{ meetup.shortInfo }}
                   </p>
                 </div>
               </div>
-              <div class="content">
-                <!-- TODO: Display Meetup shortInfo -->
-                <p>
-                  {{ meetup.shortInfo }}
-                </p>
-              </div>
-            </div>
-            <footer class="card-footer">
-              <router-link
-                :to="{ name: 'PageMeetupDetail', params: { id: meetup._id } }"
-                class="card-footer-item"
-                >View</router-link
-              >
-              <router-link
-                :to="{
-                  name: 'PageMeetupEdit',
-                  params: { meetupId: meetup._id },
-                }"
-                class="card-footer-item"
-                >Edit</router-link
-              >
-              
+              <footer class="card-footer">
+                <router-link
+                  :to="{ name: 'PageMeetupDetail', params: { id: meetup._id } }"
+                  class="card-footer-item"
+                  >View</router-link
+                >
+                <router-link
+                  :to="{
+                    name: 'PageMeetupEdit',
+                    params: { meetupId: meetup._id },
+                  }"
+                  class="card-footer-item"
+                  >Edit</router-link
+                >
 
-              <a class="card-footer-item">Delete</a>
-            </footer>
+                <a
+                  @click.prevent="
+                    ($event) => showDeleteMeetupWarning($event, meetup._id)
+                  "
+                  class="card-footer-item delete-item"
+                  >Delete</a
+                >
+              </footer>
+            </div>
+            <br />
           </div>
-          <br />
-        </div>
+        </template>
+        <div v-else class="stats-error">No meetups created.</div>
       </div>
       <!-- TODO: Display this div when activeTab === 'threads' -->
       <div
@@ -123,54 +131,60 @@
         class="columns is-mobile is-multiline"
       >
         <!-- TODO: Iterate over threads -->
-        <div
-          v-for="thread in threads"
-          :key="thread._id"
-          class="column is-3-tablet is-6-mobile"
-        >
-          <!-- THREADS -->
-          <div class="card">
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <!-- TODO: Display thread thread title -->
-                  <p class="title is-4">{{ thread.title }}</p>
+        <template v-if="threads && threads.length > 0">
+          <div
+            v-for="thread in threads"
+            :key="thread._id"
+            class="column is-3-tablet is-6-mobile"
+          >
+            <!-- THREADS -->
+            <div class="card">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <!-- TODO: Display thread thread title -->
+                    <p class="title is-4">{{ thread.title }}</p>
+                  </div>
                 </div>
               </div>
+              <footer class="card-footer">
+                <a class="card-footer-item">Share</a>
+                <a class="card-footer-item">Delete</a>
+              </footer>
             </div>
-            <footer class="card-footer">
-              <a class="card-footer-item">Share</a>
-              <a class="card-footer-item">Delete</a>
-            </footer>
+            <br />
           </div>
-          <br />
-        </div>
+        </template>
+        <div v-else class="stats-error">No threads created.</div>
       </div>
       <!-- TODO: Display this div when activeTab === 'posts' -->
       <div v-if="activeTab === 'posts'" class="columns is-mobile is-multiline">
         <!-- TODO: Iterate over posts -->
-        <div
-          v-for="post in posts"
-          :key="post._id"
-          class="column is-3-tablet is-6-mobile"
-        >
-          <!-- THREADS -->
-          <div class="card">
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <!-- TODO: Display post text -->
-                  <p class="title is-4">{{ post.text }}</p>
+        <template v-if="posts && posts.length > 0">
+          <div
+            v-for="post in posts"
+            :key="post._id"
+            class="column is-3-tablet is-6-mobile"
+          >
+            <!-- THREADS -->
+            <div class="card">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-content">
+                    <!-- TODO: Display post text -->
+                    <p class="title is-4">{{ post.text }}</p>
+                  </div>
                 </div>
               </div>
+              <footer class="card-footer">
+                <a class="card-footer-item">Share</a>
+                <a class="card-footer-item">Delete</a>
+              </footer>
             </div>
-            <footer class="card-footer">
-              <a class="card-footer-item">Share</a>
-              <a class="card-footer-item">Delete</a>
-            </footer>
+            <br />
           </div>
-          <br />
-        </div>
+        </template>
+        <div v-else class="stats-error">No posts created.</div>
       </div>
     </div>
   </div>
@@ -224,6 +238,18 @@ export default {
           done();
         });
     },
+    showDeleteMeetupWarning(e, meetupId) {
+      e.stopPropagation();
+      const isConfirm = confirm(
+        "Are you sure you want to delete this meetup??"
+      );
+      if (isConfirm) {
+        this.$store
+          .dispatch("meetups/deleteMeetup", meetupId)
+          .then((id) => this.$store.dispatch("stats/updateStats", id))
+          .catch((err) => console.log(err));
+      }
+    },
   },
 };
 </script>
@@ -233,6 +259,13 @@ export default {
 body {
   background: #f5f7fa;
 }
+
+.stats-error {
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+
 .stats-tab {
   border-bottom: 2px solid transparent;
   transition: 0.5s;
@@ -273,5 +306,9 @@ body {
   margin-bottom: 20px;
   padding: 20px;
   background-color: #f1f1f1;
+}
+
+.delete-item {
+  color: red;
 }
 </style>
