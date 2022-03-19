@@ -26,10 +26,19 @@
         </div>
         <div class="is-pulled-right">
           <!-- We will handle this later (: -->
-          <button v-if="isMember" 
-            @click="leaveMeetup" 
-            class="button is-danger"
-            >Leave Meetup</button>
+          <router-link
+            :to="{
+              name: 'PageMeetupEdit',
+              params: { meetupId: meetup._id },
+            }"
+            v-if="isMeetupOwner"
+            class="button is-info"
+            >Edit Meetup</router-link
+          >
+
+          <button v-if="isMember" @click="leaveMeetup" class="button is-danger">
+            Leave Meetup
+          </button>
         </div>
       </div>
     </section>
@@ -92,7 +101,13 @@
               <h3 class="title is-3">About the Meetup</h3>
               <p>{{ meetup.description }}</p>
 
-              <button v-if="canJoin" @click="joinMeetup" class="button is-primary">Join In</button>
+              <button
+                v-if="canJoin"
+                @click="joinMeetup"
+                class="button is-primary"
+              >
+                Join In
+              </button>
 
               <button
                 v-if="!isAuthenticated"
@@ -102,20 +117,23 @@
                 You need authenticate in order to join
               </button>
 
-              <ThreadCreateModal v-if="isMember || isMeetupOwner"
-                                @threadSubmitted = "createThread" 
-                                :btnTitle="`Welcome ${authUser.username}, start a new thread`"
-                                :title="'Create Thread'"/>
-
+              <ThreadCreateModal
+                v-if="isMember || isMeetupOwner"
+                @threadSubmitted="createThread"
+                :btnTitle="`Welcome ${authUser.username}, start a new thread`"
+                :title="'Create Thread'"
+              />
             </div>
-            
-            <ThreadList :threads="orderedThreads" 
-                :canMakePost="canMakePost"/>
-            
-            <button v-if="!areThreadsLoaded" @click="fetchThreadsHandler" 
-            class="button is-primary" 
-            >Load more threads</button>
-            
+
+            <ThreadList :threads="orderedThreads" :canMakePost="canMakePost" />
+
+            <button
+              v-if="!areThreadsLoaded"
+              @click="fetchThreadsHandler"
+              class="button is-primary"
+            >
+              Load more threads
+            </button>
           </div>
         </div>
       </div>
@@ -124,29 +142,28 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex"
-import  ThreadCreateModal from '@/components/ThreadCreateModal'
-import ThreadList from '@/components/ThreadList'
+import { mapActions, mapState } from "vuex";
+import ThreadCreateModal from "@/components/ThreadCreateModal";
+import ThreadList from "@/components/ThreadList";
 export default {
-
   components: {
     ThreadCreateModal,
-    ThreadList
+    ThreadList,
   },
 
-  data () {
+  data() {
     return {
       threadPageNum: 1,
-      threadPageSize: 5
-    }
+      threadPageSize: 5,
+    };
   },
 
   computed: {
     ...mapState({
       meetup: (state) => state.meetups.item,
       threads: (state) => state.threads.items,
-      authUser: state => state.auth.user,
-      areThreadsLoaded: state => state.threads.areThreadsLoaded
+      authUser: (state) => state.auth.user,
+      areThreadsLoaded: (state) => state.threads.areThreadsLoaded,
     }),
     meetupCreator() {
       return this.meetup.meetupCreator || {};
@@ -164,70 +181,72 @@ export default {
       return !this.isMeetupOwner && this.isAuthenticated && !this.isMember;
     },
 
-    canMakePost () {
-      return this.isAuthenticated && (this.isMember || this.isMeetupOwner)
+    canMakePost() {
+      return this.isAuthenticated && (this.isMember || this.isMeetupOwner);
     },
 
-    orderedThreads () {
-      const copyOfThreads = [...this.threads]
+    orderedThreads() {
+      const copyOfThreads = [...this.threads];
       return copyOfThreads.sort((thread, nextThread) => {
-        return new Date(nextThread.createdAt) - new Date(thread.createdAt)
-      })
+        return new Date(nextThread.createdAt) - new Date(thread.createdAt);
+      });
     },
-
   },
   created() {
     const meetupId = this.$route.params.id;
     this.fetchMeetupById(meetupId);
-    this.fetchThreadsHandler({meetupId, init: true});
+    this.fetchThreadsHandler({ meetupId, init: true });
 
     if (this.isAuthenticated) {
-      this.$socket.emit('meetup/subscribe', meetupId) // from server socket index.js
-      this.$socket.on('meetup/postPublished', this.addPostToThreadHandler)
+      this.$socket.emit("meetup/subscribe", meetupId); // from server socket index.js
+      this.$socket.on("meetup/postPublished", this.addPostToThreadHandler);
     }
-
   },
   // lifecycle function, me u unsubscribe masi tkryhet sessioni i shkurt
-  destroyed () {
-    this.$socket.removeListener('meetup/postPublished', this.addPostToThreadHandler)
-    this.$socket.emit('meetup/unsubscribe', this.meetup._id)
-  },  
+  destroyed() {
+    this.$socket.removeListener(
+      "meetup/postPublished",
+      this.addPostToThreadHandler
+    );
+    this.$socket.emit("meetup/unsubscribe", this.meetup._id);
+  },
 
   methods: {
     ...mapActions("meetups", ["fetchMeetupById"]), // from src store modules meetups
     ...mapActions("threads", ["fetchThreads", "postThread", "addPostToThread"]), // from store modules threads
-    
-    fetchThreadsHandler ({meetupId, init}) {
+
+    fetchThreadsHandler({ meetupId, init }) {
       const filter = {
         pageNum: this.threadPageNum,
-        pageSize: this.threadPageSize
-      }
-      this.fetchThreads({meetupId: meetupId || this.meetup._id, filter, init})
-        .then(() => {
-          this.threadPageNum++
-        })
-    },
-    
-    addPostToThreadHandler (post) {
-      this.addPostToThread({post, threadId: post.thread})
-    },
-    
-    joinMeetup () {
-      this.$store.dispatch('meetups/joinMeetup', this.meetup._id)
+        pageSize: this.threadPageSize,
+      };
+      this.fetchThreads({
+        meetupId: meetupId || this.meetup._id,
+        filter,
+        init,
+      }).then(() => {
+        this.threadPageNum++;
+      });
     },
 
-    leaveMeetup () {
-      this.$store.dispatch('meetups/leaveMeetup', this.meetup._id)
+    addPostToThreadHandler(post) {
+      this.addPostToThread({ post, threadId: post.thread });
     },
 
-    createThread ({title, closeModal}) {
-      this.postThread({title, meetupId: this.meetup._id})
-        .then(() => {
-          closeModal()
-          this.$toasted.success('Thread created', {duration: 3000})
-        })
-    }
-    
+    joinMeetup() {
+      this.$store.dispatch("meetups/joinMeetup", this.meetup._id);
+    },
+
+    leaveMeetup() {
+      this.$store.dispatch("meetups/leaveMeetup", this.meetup._id);
+    },
+
+    createThread({ title, closeModal }) {
+      this.postThread({ title, meetupId: this.meetup._id }).then(() => {
+        closeModal();
+        this.$toasted.success("Thread created", { duration: 3000 });
+      });
+    },
   },
 };
 </script>
@@ -324,5 +343,7 @@ li {
   background-color: white;
 }
 
-
+.button {
+  margin: 0px 5px;
+}
 </style>
