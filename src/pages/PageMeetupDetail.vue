@@ -114,7 +114,7 @@
             
             <button v-if="!areThreadsLoaded" @click="fetchThreadsHandler" 
             class="button is-primary" 
-            >Load more threds</button>
+            >Load more threads</button>
             
           </div>
         </div>
