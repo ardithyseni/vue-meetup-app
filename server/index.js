@@ -1,10 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const config = require('./config/dev');
+const config = require('./config');
 
 const session = require('express-session');
 const passport = require('passport');
+const path = require('path');
 
 // // Only for session authentication
 // const MongoDBStore = require('connect-mongodb-session')(session);
@@ -63,13 +64,21 @@ app.use(bodyParser.json());
 // app.use(passport.session());
 
 
-app.use('/api/v1', apiRoutes);
+// app.use('/api/v1', apiRoutes);
 app.use('/api/v1/meetups', meetupsRoutes);
 app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/posts', postsRoutes);
 app.use('/api/v1/threads', threadsRoutes);
 app.use('/api/v1/categories', categoriesRoutes);
 
+// if (process.env.NODE_ENV === 'production') { // if we are on production
+  const appPath = path.join(__dirname, '..', 'dist'); // get path outside to dist
+  app.use(express.static(appPath)); // static files are on that app
+
+  app.get('*', function(req, res) { // get all routes
+    res.sendFile(path.resolve(appPath, 'index.html'));
+  });
+//}
 
 const PORT = process.env.PORT || 3001;
 

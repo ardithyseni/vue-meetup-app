@@ -103,6 +103,7 @@
                   </div>
                 </div>
                 <!-- Threads Ends -->
+                <p class="menu-list">#{{meetup.category.name}}</p>
               </aside>
             </div>
             <div class="column is-7 is-offset-1">
@@ -213,6 +214,11 @@ export default {
         return new Date(nextThread.createdAt) - new Date(thread.createdAt);
       });
     },
+
+    categories () { 
+      return this.$store.state.categories.items
+    }
+
   },
   created() {
     const meetupId = this.$route.params.id;
@@ -226,6 +232,8 @@ export default {
         console.log(err);
         this.pageLoader_resolveData();
       });
+    
+    this.fetchCategories()
 
     // this.fetchMeetupById(meetupId);
     // this.fetchThreadsHandler({ meetupId, init: true });
@@ -247,6 +255,7 @@ export default {
   methods: {
     ...mapActions("meetups", ["fetchMeetupById"]), // from src store modules meetups
     ...mapActions("threads", ["fetchThreads", "postThread", "addPostToThread"]), // from store modules threads
+    ...mapActions('categories', ['fetchCategories']),
 
     fetchThreadsHandler({ meetupId, init }) {
       const filter = {

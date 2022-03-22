@@ -123,6 +123,10 @@
 
 <style lang="scss">
 
+// .container{
+//   background-image: linear-gradient(60deg, #abecd6 0%, #fbed96 100%);
+// }
+
 .paginationContainer {
     display: inline-block;
     padding-left: 0;

@@ -17,7 +17,7 @@
       </a>
     </div>
 
-    <div id="navbarBasicExample" class="navbar-menu is-active">
+    <div id="navbarBasicExample" class="navbar-menu is-active is-mobile">
       <div class="navbar-start">
         <router-link class="navbar-item" :to="'/'"> Home </router-link>
 
@@ -29,11 +29,10 @@
           <a class="navbar-link"> More </a>
 
           <div class="navbar-dropdown">
-            <a class="navbar-item"> About </a>
-            <a class="navbar-item"> Jobs </a>
-            <a class="navbar-item"> Contact </a>
+            <router-link :to="{name: 'PageAbout'}" class="navbar-item"> About </router-link>
+            
             <hr class="navbar-divider" />
-            <a class="navbar-item"> Report an issue </a>
+            <a href="https://www.facebook.com/ardit.hyseni.11" class="navbar-item"> Report an issue </a>
           </div>
         </div>
       </div>
@@ -89,5 +88,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.navbar {
+ background-image: linear-gradient(60deg, #abecd6 0%, #fbed96 100%);
+}
 </style>
