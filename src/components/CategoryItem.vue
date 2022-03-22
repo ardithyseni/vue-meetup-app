@@ -23,8 +23,22 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
   .is-rounded {
     border-radius: 10px !important;
+  }
+  .column.is-one-quarter {
+    color: black;
+  }
+
+  .imageFade {
+    transition: 0.3s;
+  
+
+  &:hover {
+    -webkit-box-shadow: 2px 4px 15px -2px rgba(189,189,189,1);
+    -moz-box-shadow: 2px 4px 15px -2px rgba(189,189,189,1);
+    box-shadow: 2px 4px 15px -2px rgba(189,189,189,1);
+    }
   }
 </style>

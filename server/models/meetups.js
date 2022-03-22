@@ -22,7 +22,7 @@ const meetupSchema = new Schema({
   joinedPeople: [{type: Schema.Types.ObjectId, ref: 'User'}]
 });
 
-meetupSchema.post('remove', removeThreads);
+meetupSchema.post('remove', removeThreads); // thirret remove te controllers plus edhe threads
 
 async function removeThreads(meetup, next) {
   try {
@@ -31,6 +31,7 @@ async function removeThreads(meetup, next) {
       return next(errors);
     }
 
+    // ktu iterojm tani delete-im plus i hekim joinedpeople prej meetups edhe joinedmeetups prej user
     return Promise.all(threads.map(t => t.remove()))
   })
     await User.updateMany({ _id: { $in: meetup.joinedPeople}}, { $pull: { joinedMeetups: meetup._id }})
