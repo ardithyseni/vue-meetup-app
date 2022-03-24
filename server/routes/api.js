@@ -1,10 +1,10 @@
 
-const express = require('express');
-const router = express.Router();
+// const express = require('express');
+// const router = express.Router();
 
-const ApiCtrl = require('../controllers/api');
+// const ApiCtrl = require('../controllers/api');
 
-router.get('', ApiCtrl.getMeta);
+// router.get('', ApiCtrl.getMeta);
 
-module.exports = router;
+// module.exports = router;
 

@@ -28,8 +28,8 @@ const meetupsRoutes = require('./routes/meetups'),
   usersRoutes = require('./routes/users'),
   threadsRoutes = require('./routes/threads'),
   postsRoutes = require('./routes/posts'),
-  categoriesRoutes = require('./routes/categories'),
-  apiRoutes = require('./routes/api');
+  categoriesRoutes = require('./routes/categories');
+  // apiRoutes = require('./routes/api');
 
 mongoose.connect(config.DB_URI, { useNewUrlParser: true })
   .then(() => console.log('DB Connected!'))
