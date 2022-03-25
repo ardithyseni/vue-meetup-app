@@ -4,14 +4,14 @@
       <AppHero />
       <div class="meetup-lookup-wrap">
         <div class="meetup-lookup centered">
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
+          <div class="level is-mobile">
+            <div class="level-left is-mobile">
+              <div class="level-item is-mobile">
                 <input v-model="searchedLocation" 
                        @keyup.enter="fetchMeetups"
                        type="text" 
                        class="input" 
-                       placeholder="Search">
+                       placeholder="Search city">
               </div>
               <div v-if="searchedLocation && meetups && meetups.length > 0" class="level-item">
                 <span>Meetups in {{meetups[0].location}}</span>
@@ -22,8 +22,8 @@
             </div>
             <div class="level-right">
               <div class="level-item">
-                <button class="button is-medium m-r-sm">Meetups</button>
-                <button class="button is-medium">Calendar</button>
+                <!-- <button class="button is-medium m-r-sm">Meetups</button> -->
+                <!-- <button class="button is-medium">Calendar</button> -->
               </div>
             </div>
           </div>

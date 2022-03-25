@@ -4,9 +4,9 @@
       <router-link class="navbar-item" :to="'/'">
         <h1 class="title is-4">VueMeetuper</h1>
       </router-link>
-      <a
+      <a @click="openBurger()"
         role="button"
-        class="navbar-burger burger"
+        class="navbar-burger"
         aria-label="menu"
         aria-expanded="false"
         data-target="navbarBasicExample"
@@ -17,7 +17,7 @@
       </a>
     </div>
 
-    <div id="navbarBasicExample" class="navbar-menu is-active is-mobile">
+    <div id="navbarBasicExample" :class="['navbar-menu', 'is-mobile', {'is-active': isOpen}]">
       <div class="navbar-start">
         <router-link class="navbar-item" :to="'/'"> Home </router-link>
 
@@ -25,8 +25,9 @@
           Find
         </router-link>
 
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link"> More </a>
+        <div :class="['navbar-item', 'has-dropdown', 'is-hoverable', 'is-mobile', {'is-active': isMoreOpen}]">
+        <!-- <div class="navbar-item has-dropdown is-hoverable is-mobile"> -->
+          <a @click="openMore()" class="navbar-link"> More </a>
 
           <div class="navbar-dropdown">
             <router-link :to="{name: 'PageAbout'}" class="navbar-item"> About </router-link>
@@ -57,8 +58,8 @@
             >
               <strong>Sign up</strong>
             </router-link>
-            <router-link :to="{ name: 'PageLogin' }" class="button is-light">
-              Log in
+            <router-link :to="{ name: 'PageLogin' }" class="button is-info">
+              <strong>Log in</strong>
             </router-link>
           </div>
         </div>
@@ -70,10 +71,18 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
+
   computed: {
     ...mapGetters({
       user: "auth/authUser",
     }),
+  },
+
+  data () {
+    return {
+      isOpen: false,
+      isMoreOpen: false,
+    }
   },
 
   methods: {
@@ -82,6 +91,12 @@ export default {
         .then(() => {
           this.$router.push('/')
         })
+    },
+    openBurger () {
+      this.isOpen = !this.isOpen
+    },
+    openMore() {
+      this.isMoreOpen = !this.isMoreOpen
     }
   }, 
 

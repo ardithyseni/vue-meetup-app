@@ -4,12 +4,12 @@
     <div v-if="pageLoader_isDataLoaded" class="container">
       <section class="section">
       <div class="m-b-lg">
-        <h1 class="title is-inline">Featured Meetups</h1>
-        <AppDropdown />
+        <h1 class="title is-inline">Latest Meetups</h1>
+        <!-- <AppDropdown /> -->
         <router-link v-if="user" :to="{name: 'PageMeetupCreate'}" class="button is-primary is-pulled-right m-r-sm">Create Meetups</router-link>
         <router-link :to="{name: 'PageMeetupFind'}" 
           class="button is-primary is-pulled-right m-r-sm"
-          >All
+          >Show All
         </router-link>
       </div>
       <div class="row columns is-multiline">
@@ -128,13 +128,16 @@
 // }
 
 .paginationContainer {
+    // display: inline-block;
+    // // padding-left: 0;
+    // margin: 0 auto;
+    // border-radius: 4px;
+    // position: absolute;
     display: inline-block;
-    padding-left: 0;
-    margin: 20px 0;
-    border-radius: 4px;
-    text-align: center;
+    // text-align: center;
     position: absolute;
-    left: 41%;
+     left: 50%;
+     transform: translateX(-50%);
 
     > li {
       display: inline;
