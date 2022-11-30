@@ -1,4 +1,5 @@
 # vue-meetuper
+## Live site : [Meetup App](http://vue-meetupapp.herokuapp.com/)
 
 ## Project setup
 ```
